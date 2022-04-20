@@ -6,9 +6,11 @@ class Play extends Phaser.Scene {
     preload() {
         //load images here
         this.load.image('playerCube', './assets/cubePink.png');
+        this.load.image('obstacle', './assets/cubeBlue.png');
     }
 
     create() {
+        this.enemy = new Obstacle(this, this.game.config.width/3, this.game.config.height/3 * 2, 'obstacle').setOrigin(1,0);
         this.player = new Cube(this, this.game.config.width/3, this.game.config.height/3 * 2, 'playerCube').setOrigin(1,0);
 
         //set controls

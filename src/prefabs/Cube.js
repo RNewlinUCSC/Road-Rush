@@ -8,14 +8,15 @@ class Cube extends Phaser.GameObjects.Sprite {
     }
 
     update() {
+        this.setDepth(this.zone);
         if(Phaser.Input.Keyboard.JustDown(keyLEFT) && this.zone != 1) {
-            this.x -= this.width/2;
-            this.y -= this.height/4;
+            this.x -= this.width/2 - 2;
+            this.y -= this.height/4 + 1;
             this.zone -= 1;
         }
         if(Phaser.Input.Keyboard.JustDown(keyRIGHT) && this.zone != 5) {
-            this.x += this.width/2;
-            this.y += this.height/4;
+            this.x += this.width/2 - 2;
+            this.y += this.height/4 + 1;
             this.zone += 1;
         }
     }
