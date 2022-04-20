@@ -9,7 +9,7 @@ class Obstacle extends Phaser.GameObjects.Sprite {
     }
 
     update() {
-        this.x -= 2;
-        this.y += 1;
+        this.x -= .5;
+        this.y += .25;
     }
 }

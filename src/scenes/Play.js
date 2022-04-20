@@ -10,7 +10,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        this.enemy = new Obstacle(this, this.game.config.width/3, this.game.config.height/3 * 2, 'obstacle').setOrigin(1,0);
+        this.enemy = new Obstacle(this, this.game.config.width/3 * 2, this.game.config.height/3, 'obstacle').setOrigin(1,0);
         this.player = new Cube(this, this.game.config.width/3, this.game.config.height/3 * 2, 'playerCube').setOrigin(1,0);
 
         //set controls
@@ -20,5 +20,6 @@ class Play extends Phaser.Scene {
 
     update() {
         this.player.update();
+        this.enemy.update();
     }
 }
