@@ -5,10 +5,14 @@ class Play extends Phaser.Scene {
 
     preload() {
         //load images here
-        this.preload.image('playerCube', './assets/cubePink.png');
+        this.load.image('playerCube', './assets/cubePink.png');
     }
 
     create() {
-        this.player = new Cube(this, this.game.config.width/2, this.game.config.height/2, 0, 'playerCube').setOrigin(0,0);
+        this.player = new Cube(this, this.game.config.width/2, this.game.config.height/2, 1, 'playerCube').setOrigin(0,0);
+    }
+
+    update() {
+
     }
 }
