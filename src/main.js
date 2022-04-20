@@ -9,5 +9,5 @@ let config = {
 let game = new Phaser.Game(config)
 
 // reserve inputs
-let keyLEFT, keyRight;
+let keyLEFT, keyRIGHT;
 
