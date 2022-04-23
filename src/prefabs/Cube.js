@@ -1,27 +1,30 @@
-class Cube extends Phaser.GameObjects.Sprite {
+class Cube extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame) {
         super(scene, x, y, texture, frame);
 
         scene.add.existing(this);
+        scene.physics.add.existing(this);
+        this.body.setCircle(20, 4, 4);
         this.zone = 3;
         this.setDepth(this.zone);
-
+        //this.setDragX(350);
+        //this.setDragY(200);
     }
 
     update() {
-        //if(Phaser.Input.Keyboard.JustDown(keyLEFT) && this.zone != 1) {
-            //this.x -= this.width/2 - 2;
-            //this.y -= this.height/4 + 1;
+        this.x += 1.75/6;
+        this.y -= 1/6;
+        if(Phaser.Input.Keyboard.JustDown(keyLEFT) && this.zone != 1) {
+            this.setVelocityX(-21*4);
+            this.setVelocityY(- 12*4);
             //this.zone -= 1;
-            //this.setDepth(this.zone);
-            //return 1;
-        //}
+            this.setDepth(this.x);
+        }
         if(Phaser.Input.Keyboard.JustDown(keyRIGHT) && this.zone != 5) {
-            this.x += 21;
-            this.y += 12;
-            this.zone += 1;
-            this.setDepth(this.zone);
-            return 2;
+            this.setVelocityX(21*4);
+            this.setVelocityY(12*4);
+            //this.zone += 1;
+            this.setDepth(this.x);
         }
     }
 }
