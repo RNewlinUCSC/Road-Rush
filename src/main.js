@@ -8,7 +8,7 @@ let config = {
         arcade: {
             gravity: { y: 0 },
             fps: 30,
-            debug: true
+            debug: false         //if this is changed, update global variable to reflect change
         }
     },
     scene: [Play],
@@ -20,4 +20,5 @@ let game = new Phaser.Game(config)
 let keyLEFT, keyRIGHT;
 
 let obstacleTotal = 0;
+let debugCheck = false;
 
