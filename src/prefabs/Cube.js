@@ -4,7 +4,7 @@ class Cube extends Phaser.Physics.Arcade.Sprite {
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.body.setCircle(21, 4, 4);
+        this.body.setCircle(23, 12, -2);
     }
 
     update() {
