@@ -103,7 +103,6 @@ class Play extends Phaser.Scene {
         this.physics.world.collide(this.player, this.obstacleGroup, this.playerCollision, null, this);
 
         if(this.collisionCircleLine()){
-            console.log("is true");
             this.player.x -= 1.75/8;
             this.player.y += 1/8;
         }
@@ -116,7 +115,6 @@ class Play extends Phaser.Scene {
 
     gameOverCheck() {
         if(this.player.x < -20 || this.player.y > 480) {
-            console.log(true);
             return false;
         }
         return true;
