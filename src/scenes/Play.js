@@ -8,6 +8,7 @@ class Play extends Phaser.Scene {
         this.load.image('playerCube', './assets/playerCube.png');
         this.load.image('obstacle', './assets/obstacleCube.png');
         this.load.image('slowZone', './assets/slowZoneRed.png');
+        this.load.image('late', './assets/youreLate.png');
         //load sprite sheets
         this.load.spritesheet('rolltateLeft', './assets/pinkCubeSpriteSheetLeft.png', {frameWidth: 48, frameHeight: 48, startFrame: 0, endFrame: 11});
         this.load.spritesheet('rolltate', './assets/pinkCubeSpriteSheetLeft.png', {frameWidth: 48, frameHeight: 48, startFrame: 0, endFrame: 11});
@@ -35,6 +36,7 @@ class Play extends Phaser.Scene {
         //set controls
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
         //animation config
         this.anims.create({
@@ -65,15 +67,20 @@ class Play extends Phaser.Scene {
 
     update() {
 
-        if(this.gameOverCheck()) {
             this.timer++;
             this.timer2++;
             this.seed = Math.floor(Math.random() * (20 + 1));
             this.seed2 = Math.floor(Math.random() * (20 + 1));
             this.seeed3 = Math.floor(Math.random() * (20 + 1));
         
-            
-            this.player.update();
+            if(this.gameOverCheck()) {
+                this.player.update();
+            }else {
+                this.add.image(0,0,'late').setOrigin(0,0).setDepth(1000);
+                if(keyR.isDown) {
+                    this.scene.restart();
+                }
+            }
         
             if(this.timer > 90 && obstacleTotal < 30) {
                 this.spawnObstacle(this.seed);
@@ -92,7 +99,6 @@ class Play extends Phaser.Scene {
                 this.obstacleCount++;
                 this.timer3 = 0;
             }
-        }   
 
         this.physics.world.collide(this.player, this.obstacleGroup, this.playerCollision, null, this);
 
@@ -111,9 +117,9 @@ class Play extends Phaser.Scene {
     gameOverCheck() {
         if(this.player.x < -20 || this.player.y > 480) {
             console.log(true);
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
 

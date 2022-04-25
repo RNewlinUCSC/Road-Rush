@@ -17,7 +17,7 @@ let config = {
 let game = new Phaser.Game(config)
 
 // reserve inputs
-let keyLEFT, keyRIGHT;
+let keyLEFT, keyRIGHT, keyR;
 
 let obstacleTotal = 0;
 let debugCheck = false;
