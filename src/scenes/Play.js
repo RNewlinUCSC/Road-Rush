@@ -64,31 +64,35 @@ class Play extends Phaser.Scene {
 
 
     update() {
-        this.timer++;
-        this.timer2++;
-        this.seed = Math.floor(Math.random() * (20 + 1));
-        this.seed2 = Math.floor(Math.random() * (20 + 1));
-        this.seeed3 = Math.floor(Math.random() * (20 + 1));
 
-        this.player.update();
-
-        if(this.timer > 90 && obstacleTotal < 30) {
-            this.spawnObstacle(this.seed);
-            this.obstacleCount++;
-            this.timer = 0;
-        }
-
-        if(this.timer2 > 90 && obstacleTotal < 30) {
-            this.spawnObstacle(this.seed2);
-            this.obstacleCount++;
-            this.timer2 = 0;
-        }
-
-        if(this.timer3 > 90 && obstacleTotal < 30) {
-            this.spawnObstacle(this.seeed3);
-            this.obstacleCount++;
-            this.timer3 = 0;
-        }
+        if(this.gameOverCheck()) {
+            this.timer++;
+            this.timer2++;
+            this.seed = Math.floor(Math.random() * (20 + 1));
+            this.seed2 = Math.floor(Math.random() * (20 + 1));
+            this.seeed3 = Math.floor(Math.random() * (20 + 1));
+        
+            
+            this.player.update();
+        
+            if(this.timer > 90 && obstacleTotal < 30) {
+                this.spawnObstacle(this.seed);
+                this.obstacleCount++;
+                this.timer = 0;
+            }
+        
+            if(this.timer2 > 90 && obstacleTotal < 30) {
+                this.spawnObstacle(this.seed2);
+                this.obstacleCount++;
+                this.timer2 = 0;
+            }
+        
+            if(this.timer3 > 90 && obstacleTotal < 30) {
+                this.spawnObstacle(this.seeed3);
+                this.obstacleCount++;
+                this.timer3 = 0;
+            }
+        }   
 
         this.physics.world.collide(this.player, this.obstacleGroup, this.playerCollision, null, this);
 
@@ -102,6 +106,14 @@ class Play extends Phaser.Scene {
     playerCollision() {
         this.player.x -= 1.75/8;
         this.player.y += 1/8;
+    }
+
+    gameOverCheck() {
+        if(this.player.x < -20 || this.player.y > 480) {
+            console.log(true);
+            return true;
+        }
+        return false;
     }
 
 
