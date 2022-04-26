@@ -8,11 +8,14 @@ let config = {
         arcade: {
             gravity: { y: 0 },
             fps: 30,
-            debug: true         //if this is changed, update global variable to reflect change
+            debug: true         
         }
     },
     scene: [Play],
 }
+// Get the yaml stuff as quick as possible
+let obstacleYAML;
+getYAML();
 
 let game = new Phaser.Game(config)
 
@@ -20,5 +23,9 @@ let game = new Phaser.Game(config)
 let keyLEFT, keyRIGHT, keyR;
 
 let obstacleTotal = 0;
-let debugCheck = true;
 
+async function getYAML(){
+    const yaml = await fetch("./src/obstacles.yaml");
+    const yamlText = await yaml.text();
+    obstacleYAML = jsyaml.load(yamlText);
+}

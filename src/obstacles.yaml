@@ -1,0 +1,36 @@
+ObstacleTest: null #Add the key of the obstacle you want to test. If not testing, put null
+
+# Each obstacle's key should be unique
+# 0 = Empty space
+# 1 = Obstacle
+obstacle1: 
+  - 0, 1, 0, 1, 0, 1, 0
+  - 0, 0, 0, 0, 0, 0, 0
+  - 1, 0, 1, 0, 1, 0, 1
+
+obstacle2: 
+  - 1, 1, 0, 0, 0, 1, 1
+  - 1, 1, 0, 0, 0, 1, 1
+  - 1, 1, 0, 0, 0, 1, 1
+  - 1, 1, 0, 0, 0, 1, 1
+
+obstacle3: 
+  - 0, 1, 1, 0, 1, 1, 0
+  - 0, 1, 1, 0, 1, 1, 0
+  - 0, 1, 1, 0, 1, 1, 0
+  - 0, 1, 1, 0, 1, 1, 0
+
+obstacle4: 
+  - 1, 0, 0, 1, 0, 0, 0
+  - 1, 0, 0, 0, 0, 0, 0
+  - 1, 0, 1, 0, 1, 0, 0
+
+obstacle5: 
+  - 1, 0, 1, 1, 0, 0, 0
+  - 1, 0, 1, 1, 0, 0, 0
+  - 1, 0, 1, 1, 0, 0, 0
+
+obstacle6: 
+  - 0, 0, 0, 1, 0, 1, 1
+  - 0, 0, 0, 1, 0, 1, 1
+  - 0, 0, 0, 1, 0, 1, 1

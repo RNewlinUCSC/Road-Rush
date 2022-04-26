@@ -11,7 +11,7 @@ class Obstacle extends Phaser.Physics.Arcade.Sprite {
     update() {
         this.x -= 1.75/2;
         this.y += 1/2;
-        this.destroyObstacle
+        this.destroyObstacle();
         this.setDepth(this.y + 14);
     }
 
