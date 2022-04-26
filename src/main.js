@@ -23,6 +23,7 @@ let game = new Phaser.Game(config)
 let keyLEFT, keyRIGHT, keyR;
 
 let obstacleTotal = 0;
+let debugCheck = true;
 
 async function getYAML(){
     const yaml = await fetch("./src/obstacles.yaml");

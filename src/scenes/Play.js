@@ -21,9 +21,6 @@ class Play extends Phaser.Scene {
         this.blx2 = 1080;
         this.bly2 = 311.769;
 
-<<<<<<< HEAD
-        this.timerDelay = 5000; // in milliseconds
-=======
         //set values of left bounding line
         this.blLx1 = 540;
         this.blLy1 = 480;
@@ -36,14 +33,13 @@ class Play extends Phaser.Scene {
         this.blRx2 = 0;
         this.blRy2 = 374.123;
 
-
+        this.timerDelay = 5000; // in milliseconds
         this.timer = 0;
         this.timer2 = 10;
         this.timer3 = 20;
         this.spawnX = (game.config.width/2);
         this.spawnY = -48;
         this.seed = 0;
->>>>>>> 908fca403a002d52963ede7318607bf7308989c3
 
         //player is created here
         this.player = new Cube(this, this.game.config.width/3, this.game.config.height/3 * 2, 'playerCube').setOrigin(1,0);
@@ -55,12 +51,8 @@ class Play extends Phaser.Scene {
         this.line2 = new Phaser.Geom.Line(540, 480, 1080, 480-311.769);
         this.line3 = new Phaser.Geom.Line(648, 0, 0, 374.123)
         this.graphics.lineStyle(2, 0xff0000);
-<<<<<<< HEAD
-        if(config.physics.arcade.debug) {
-=======
         //removes lines if debug is turned off *the variable
         if(debugCheck) {
->>>>>>> 908fca403a002d52963ede7318607bf7308989c3
             this.graphics.strokeLineShape(this.line);
             this.graphics.strokeLineShape(this.line2);
             this.graphics.strokeLineShape(this.line3);
@@ -87,7 +79,6 @@ class Play extends Phaser.Scene {
         this.obstacleGroup = this.add.group({
             runChildUpdate: true
         })
-<<<<<<< HEAD
 
         this.generateObstacles();
         // Timer for how often obstacles should start spawning
@@ -101,9 +92,6 @@ class Play extends Phaser.Scene {
           })
     }
 
-=======
-    }
-
     //function to spawn a new obstacle
     spawnObstacle(random) {
         let enemy = new Obstacle(this, this.spawnX + (random * 21), this.spawnY + (random * 12), 'obstacle').setOrigin(1,0);
@@ -111,7 +99,6 @@ class Play extends Phaser.Scene {
     }
 
 
->>>>>>> 908fca403a002d52963ede7318607bf7308989c3
     update() {
         //if gameover is triggered player movement is disabled
         if(this.gameOverCheck()) {
@@ -124,8 +111,7 @@ class Play extends Phaser.Scene {
             }
         }
 
-<<<<<<< HEAD
-=======
+
             this.timer++;
             this.timer2++;
             this.seed = Math.floor(Math.random() * (20 + 1));
@@ -143,25 +129,25 @@ class Play extends Phaser.Scene {
                 }
             }
         
-            if(this.timer > 90 && obstacleTotal < 30) {
-                this.spawnObstacle(this.seed);
-                this.obstacleCount++;
-                this.timer = 0;
-            }
+            // if(this.timer > 90 && obstacleTotal < 30) {
+            //     this.spawnObstacle(this.seed);
+            //     this.obstacleCount++;
+            //     this.timer = 0;
+            // }
         
-            if(this.timer2 > 90 && obstacleTotal < 30) {
-                this.spawnObstacle(this.seed2);
-                this.obstacleCount++;
-                this.timer2 = 0;
-            }
+            // if(this.timer2 > 90 && obstacleTotal < 30) {
+            //     this.spawnObstacle(this.seed2);
+            //     this.obstacleCount++;
+            //     this.timer2 = 0;
+            // }
         
-            if(this.timer3 > 90 && obstacleTotal < 30) {
-                this.spawnObstacle(this.seeed3);
-                this.obstacleCount++;
-                this.timer3 = 0;
-            }
+            // if(this.timer3 > 90 && obstacleTotal < 30) {
+            //     this.spawnObstacle(this.seeed3);
+            //     this.obstacleCount++;
+            //     this.timer3 = 0;
+            // }
 
->>>>>>> 908fca403a002d52963ede7318607bf7308989c3
+
         //enables collision between obstacles and players
         this.physics.world.collide(this.player, this.obstacleGroup, this.playerCollision, null, this);
 
@@ -184,10 +170,7 @@ class Play extends Phaser.Scene {
         this.player.x -= 1.75/8;
         this.player.y += 1/8;
     }
-<<<<<<< HEAD
-=======
 
->>>>>>> 908fca403a002d52963ede7318607bf7308989c3
     //returns true if the player goes off the bottom or left of the screen
     gameOverCheck() {
         if(this.player.x < -20 || this.player.y > 480) {
