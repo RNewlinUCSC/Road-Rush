@@ -21,8 +21,31 @@ class Play extends Phaser.Scene {
         this.blx2 = 1080;
         this.bly2 = 311.769;
 
+<<<<<<< HEAD
         this.timerDelay = 5000; // in milliseconds
+=======
+        //set values of left bounding line
+        this.blLx1 = 540;
+        this.blLy1 = 480;
+        this.blLx2 = 1080;
+        this.blLy2 = 480-311.769;
 
+        //set values of right bounding line
+        this.blRx1 = 648;
+        this.blRy1 = 0;
+        this.blRx2 = 0;
+        this.blRy2 = 374.123;
+
+
+        this.timer = 0;
+        this.timer2 = 10;
+        this.timer3 = 20;
+        this.spawnX = (game.config.width/2);
+        this.spawnY = -48;
+        this.seed = 0;
+>>>>>>> 908fca403a002d52963ede7318607bf7308989c3
+
+        //player is created here
         this.player = new Cube(this, this.game.config.width/3, this.game.config.height/3 * 2, 'playerCube').setOrigin(1,0);
 
         //creates red line and circle
@@ -32,7 +55,12 @@ class Play extends Phaser.Scene {
         this.line2 = new Phaser.Geom.Line(540, 480, 1080, 480-311.769);
         this.line3 = new Phaser.Geom.Line(648, 0, 0, 374.123)
         this.graphics.lineStyle(2, 0xff0000);
+<<<<<<< HEAD
         if(config.physics.arcade.debug) {
+=======
+        //removes lines if debug is turned off *the variable
+        if(debugCheck) {
+>>>>>>> 908fca403a002d52963ede7318607bf7308989c3
             this.graphics.strokeLineShape(this.line);
             this.graphics.strokeLineShape(this.line2);
             this.graphics.strokeLineShape(this.line3);
@@ -55,9 +83,11 @@ class Play extends Phaser.Scene {
             frameRate: 30
         });
 
+        //Obstacles group is created
         this.obstacleGroup = this.add.group({
             runChildUpdate: true
         })
+<<<<<<< HEAD
 
         this.generateObstacles();
         // Timer for how often obstacles should start spawning
@@ -71,6 +101,17 @@ class Play extends Phaser.Scene {
           })
     }
 
+=======
+    }
+
+    //function to spawn a new obstacle
+    spawnObstacle(random) {
+        let enemy = new Obstacle(this, this.spawnX + (random * 21), this.spawnY + (random * 12), 'obstacle').setOrigin(1,0);
+        this.obstacleGroup.add(enemy);
+    }
+
+
+>>>>>>> 908fca403a002d52963ede7318607bf7308989c3
     update() {
         //if gameover is triggered player movement is disabled
         if(this.gameOverCheck()) {
@@ -83,12 +124,58 @@ class Play extends Phaser.Scene {
             }
         }
 
+<<<<<<< HEAD
+=======
+            this.timer++;
+            this.timer2++;
+            this.seed = Math.floor(Math.random() * (20 + 1));
+            this.seed2 = Math.floor(Math.random() * (20 + 1));
+            this.seeed3 = Math.floor(Math.random() * (20 + 1));
+        
+            //if gameover is triggered player movement is disabled
+            if(this.gameOverCheck()) {
+                this.player.update();
+            }else {
+                //temp game over screen
+                this.add.image(0,0,'late').setOrigin(0,0).setDepth(1000);
+                if(keyR.isDown) {                       //Restart level
+                    this.scene.restart();
+                }
+            }
+        
+            if(this.timer > 90 && obstacleTotal < 30) {
+                this.spawnObstacle(this.seed);
+                this.obstacleCount++;
+                this.timer = 0;
+            }
+        
+            if(this.timer2 > 90 && obstacleTotal < 30) {
+                this.spawnObstacle(this.seed2);
+                this.obstacleCount++;
+                this.timer2 = 0;
+            }
+        
+            if(this.timer3 > 90 && obstacleTotal < 30) {
+                this.spawnObstacle(this.seeed3);
+                this.obstacleCount++;
+                this.timer3 = 0;
+            }
+
+>>>>>>> 908fca403a002d52963ede7318607bf7308989c3
         //enables collision between obstacles and players
         this.physics.world.collide(this.player, this.obstacleGroup, this.playerCollision, null, this);
 
+        //calls the function that calculates if the player is touching a bounding line, and then slows the player down if true
         if(this.collisionCircleLine()){
             this.player.x -= 1.75/8;
             this.player.y += 1/8;
+        }
+        if(this.collisionLeftBoundingLine()){
+            this.player.x -= 1.75;
+            this.player.y += 1;
+        }else if(this.collisionRightBoundingLine()){
+            this.player.x -= 1.75;
+            this.player.y += 1;
         }
     }
 
@@ -97,6 +184,10 @@ class Play extends Phaser.Scene {
         this.player.x -= 1.75/8;
         this.player.y += 1/8;
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 908fca403a002d52963ede7318607bf7308989c3
     //returns true if the player goes off the bottom or left of the screen
     gameOverCheck() {
         if(this.player.x < -20 || this.player.y > 480) {
@@ -158,5 +249,59 @@ class Play extends Phaser.Scene {
 
         if( this.height < 20 ) return true;
         else return false;
+    }
+
+    collisionLeftBoundingLine(){
+        this.side1 = Math.sqrt(Math.pow(this.player.x - this.blLx1,2) + Math.pow(this.player.y - this.blLy1,2)); // Thats the pythagoras theoram If I can spell it right
+        this.side2 = Math.sqrt(Math.pow(this.player.x - this.blLx2,2) + Math.pow(this.player.y - this.blLy2,2));
+        this.base = Math.sqrt(Math.pow(this.blLx2 - this.blLx1,2) + Math.pow(this.blLy2 - this.blLy1,2));
+    
+        if(20 > this.side1 || 20 > this.side2)
+            return true;
+    
+        this.angle1 = Math.atan2( this.blLx2 - this.blLx1, this.blLy2 - this.blLy1 ) - Math.atan2( this.player.x - this.b1Lx1, this.player.y - this.blLy1 ); // Some complicated Math
+        this.angle2 = Math.atan2( this.blLx1 - this.blLx2, this.blLy1 - this.blLy2 ) - Math.atan2( this.player.x - this.blLx2, this.player.y - this.blLy2 ); // Some complicated Math again
+    
+        if(this.angle1 > Math.PI / 2 || this.angle2 > Math.PI / 2) // Making sure if any angle is an obtuse one and Math.PI / 2 = 90 deg
+            return false;
+    
+    
+            // Now if none are true then
+            this.semiperimeter = (this.side1 + this.side2 + this.base) / 2;
+            this.areaOfTriangle = Math.sqrt( this.semiperimeter * (this.semiperimeter - this.side1) * (this.semiperimeter - this.side2) * (this.semiperimeter - this.base) ); // Heron's formula for the area
+            this.height = 2*this.areaOfTriangle/this.base;
+    
+            if( this.height < 20 )
+                return true;
+            else
+                return false;
+    
+    }
+
+    collisionRightBoundingLine(){
+        this.side1 = Math.sqrt(Math.pow(this.player.x - this.blRx1,2) + Math.pow(this.player.y - this.blRy1,2)); // Thats the pythagoras theoram If I can spell it right
+        this.side2 = Math.sqrt(Math.pow(this.player.x - this.blRx2,2) + Math.pow(this.player.y - this.blRy2,2));
+        this.base = Math.sqrt(Math.pow(this.blRx2 - this.blRx1,2) + Math.pow(this.blRy2 - this.blRy1,2));
+    
+        if(20 > this.side1 || 20 > this.side2)
+            return true;
+    
+        this.angle1 = Math.atan2( this.blRx2 - this.blRx1, this.blRy2 - this.blRy1 ) - Math.atan2( this.player.x - this.b1Rx1, this.player.y - this.blRy1 ); // Some complicated Math
+        this.angle2 = Math.atan2( this.blRx1 - this.blRx2, this.blRy1 - this.blRy2 ) - Math.atan2( this.player.x - this.blRx2, this.player.y - this.blRy2 ); // Some complicated Math again
+    
+        if(this.angle1 > Math.PI / 2 || this.angle2 > Math.PI / 2) // Making sure if any angle is an obtuse one and Math.PI / 2 = 90 deg
+            return false;
+    
+    
+            // Now if none are true then
+            this.semiperimeter = (this.side1 + this.side2 + this.base) / 2;
+            this.areaOfTriangle = Math.sqrt( this.semiperimeter * (this.semiperimeter - this.side1) * (this.semiperimeter - this.side2) * (this.semiperimeter - this.base) ); // Heron's formula for the area
+            this.height = 2*this.areaOfTriangle/this.base;
+    
+            if( this.height < 20 )
+                return true;
+            else
+                return false;
+    
     }
 }
