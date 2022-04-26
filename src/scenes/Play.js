@@ -111,7 +111,6 @@ class Play extends Phaser.Scene {
             }
         }
 
-
             this.timer++;
             this.timer2++;
             this.seed = Math.floor(Math.random() * (20 + 1));
@@ -153,8 +152,8 @@ class Play extends Phaser.Scene {
 
         //calls the function that calculates if the player is touching a bounding line, and then slows the player down if true
         if(this.collisionCircleLine()){
-            this.player.x -= 1.75/8;
-            this.player.y += 1/8;
+            this.player.x -= 1.75/4;
+            this.player.y += 1/4;
         }
         if(this.collisionLeftBoundingLine()){
             this.player.x -= 1.75;
@@ -215,23 +214,25 @@ class Play extends Phaser.Scene {
         this.side2 = Math.sqrt(Math.pow(this.player.x - this.blx2,2) + Math.pow(this.player.y - this.bly2,2));
         this.base = Math.sqrt(Math.pow(this.blx2 - this.blx1,2) + Math.pow(this.bly2 - this.bly1,2));
     
-        if(20 > this.side1 || 20 > this.side2) return true;
+        if(20 > this.side1 || 20 > this.side2) 
+            return true;
     
         this.angle1 = Math.atan2( this.blx2 - this.blx1, this.bly2 - this.bly1 ) - Math.atan2( this.player.x - this.b1x1, this.player.y - this.bly1 ); // Some complicated Math
         this.angle2 = Math.atan2( this.blx1 - this.blx2, this.bly1 - this.bly2 ) - Math.atan2( this.player.x - this.blx2, this.player.y - this.bly2 ); // Some complicated Math again
     
-        if(this.angle1 > Math.PI / 2 || this.angle2 > Math.PI / 2) {// Making sure if any angle is an obtuse one and Math.PI / 2 = 90 deg
+        if(this.angle1 > Math.PI / 2 || this.angle2 > Math.PI / 2) // Making sure if any angle is an obtuse one and Math.PI / 2 = 90 deg
             return false;
-        }
     
     
-        // Now if none are true then
-        this.semiperimeter = (this.side1 + this.side2 + this.base) / 2;
-        this.areaOfTriangle = Math.sqrt( this.semiperimeter * (this.semiperimeter - this.side1) * (this.semiperimeter - this.side2) * (this.semiperimeter - this.base) ); // Heron's formula for the area
-        this.height = 2*this.areaOfTriangle/this.base;
+            // Now if none are true then
+            this.semiperimeter = (this.side1 + this.side2 + this.base) / 2;
+            this.areaOfTriangle = Math.sqrt( this.semiperimeter * (this.semiperimeter - this.side1) * (this.semiperimeter - this.side2) * (this.semiperimeter - this.base) ); // Heron's formula for the area
+            this.height = 2*this.areaOfTriangle/this.base;
 
-        if( this.height < 20 ) return true;
-        else return false;
+        if( this.height < 20 ) 
+            return true;
+        else 
+            return false;
     }
 
     collisionLeftBoundingLine(){
