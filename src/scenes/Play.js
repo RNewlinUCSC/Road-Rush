@@ -15,6 +15,12 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        //set values of top bounding line
+        this.blx1 = 540;
+        this.bly1 = 0;
+        this.blx2 = 1080;
+        this.bly2 = 311.769;
+
         this.timer = 0;
         this.timer2 = 10;
         this.timer3 = 20;
@@ -27,10 +33,15 @@ class Play extends Phaser.Scene {
 
         //creates red line and circle
         this.graphics = this.add.graphics();
-        this.line = new Phaser.Geom.Line(320, 0, 640, 184.752);
+        //this.line = new Phaser.Geom.Line(320, 0, 640, 184.752);  //line for 480x640
+        this.line = new Phaser.Geom.Line(this.blx1, this.bly1, this.blx2, this.bly2);
+        this.line2 = new Phaser.Geom.Line(540, 480, 1080, 480-311.769);
+        this.line3 = new Phaser.Geom.Line(648, 0, 0, 374.123)
         this.graphics.lineStyle(2, 0xff0000);
         if(debugCheck) {
             this.graphics.strokeLineShape(this.line);
+            this.graphics.strokeLineShape(this.line2);
+            this.graphics.strokeLineShape(this.line3);
         }
 
         //set controls
@@ -124,15 +135,15 @@ class Play extends Phaser.Scene {
     //credit: Coding Hub 
     //source: https://stackoverflow.com/questions/10957689/collision-detection-between-a-line-and-a-circle-in-javascript
     collisionCircleLine(){
-        this.side1 = Math.sqrt(Math.pow(this.player.x - 320,2) + Math.pow(this.player.y - 0,2)); // Thats the pythagoras theoram If I can spell it right
-        this.side2 = Math.sqrt(Math.pow(this.player.x - 640,2) + Math.pow(this.player.y - 184.752,2));
-        this.base = Math.sqrt(Math.pow(640 - 320,2) + Math.pow(184.752 - 0,2));
+        this.side1 = Math.sqrt(Math.pow(this.player.x - this.blx1,2) + Math.pow(this.player.y - this.bly1,2)); // Thats the pythagoras theoram If I can spell it right
+        this.side2 = Math.sqrt(Math.pow(this.player.x - this.blx2,2) + Math.pow(this.player.y - this.bly2,2));
+        this.base = Math.sqrt(Math.pow(this.blx2 - this.blx1,2) + Math.pow(this.bly2 - this.bly1,2));
     
         if(20 > this.side1 || 20 > this.side2)
             return true;
     
-        this.angle1 = Math.atan2( 640 - 320, 184.752 - 0 ) - Math.atan2( this.player.x - 320, this.player.y - 0 ); // Some complicated Math
-        this.angle2 = Math.atan2( 320 - 640, 0 - 184.752 ) - Math.atan2( this.player.x - 640, this.player.y - 184.752 ); // Some complicated Math again
+        this.angle1 = Math.atan2( this.blx2 - this.blx1, this.bly2 - this.bly1 ) - Math.atan2( this.player.x - this.b1x1, this.player.y - this.bly1 ); // Some complicated Math
+        this.angle2 = Math.atan2( this.blx1 - this.blx2, this.bly1 - this.bly2 ) - Math.atan2( this.player.x - this.blx2, this.player.y - this.bly2 ); // Some complicated Math again
     
         if(this.angle1 > Math.PI / 2 || this.angle2 > Math.PI / 2) // Making sure if any angle is an obtuse one and Math.PI / 2 = 90 deg
             return false;
