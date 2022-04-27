@@ -33,13 +33,8 @@ class Play extends Phaser.Scene {
         this.blRx2 = 0;
         this.blRy2 = 374.123;
 
-        this.timerDelay = 5000; // in milliseconds
+        this.timerDelay = 4000; // in milliseconds
         this.timer = 0;
-        this.timer2 = 10;
-        this.timer3 = 20;
-        this.spawnX = (game.config.width/2);
-        this.spawnY = -48;
-        this.seed = 0;
 
         //player is created here
         this.player = new Cube(this, this.game.config.width/3, this.game.config.height/3 * 2, 'playerCube').setOrigin(1,0);
@@ -111,12 +106,6 @@ class Play extends Phaser.Scene {
             }
         }
 
-            this.timer++;
-            this.timer2++;
-            this.seed = Math.floor(Math.random() * (20 + 1));
-            this.seed2 = Math.floor(Math.random() * (20 + 1));
-            this.seeed3 = Math.floor(Math.random() * (20 + 1));
-        
             //if gameover is triggered player movement is disabled
             if(this.gameOverCheck()) {
                 this.player.update();
@@ -127,25 +116,6 @@ class Play extends Phaser.Scene {
                     this.scene.restart();
                 }
             }
-        
-            // if(this.timer > 90 && obstacleTotal < 30) {
-            //     this.spawnObstacle(this.seed);
-            //     this.obstacleCount++;
-            //     this.timer = 0;
-            // }
-        
-            // if(this.timer2 > 90 && obstacleTotal < 30) {
-            //     this.spawnObstacle(this.seed2);
-            //     this.obstacleCount++;
-            //     this.timer2 = 0;
-            // }
-        
-            // if(this.timer3 > 90 && obstacleTotal < 30) {
-            //     this.spawnObstacle(this.seeed3);
-            //     this.obstacleCount++;
-            //     this.timer3 = 0;
-            // }
-
 
         //enables collision between obstacles and players
         this.physics.world.collide(this.player, this.obstacleGroup, this.playerCollision, null, this);
