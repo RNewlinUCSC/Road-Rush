@@ -4,6 +4,7 @@ class Play extends Phaser.Scene {
     }
 
     init(data){
+        // In the menu, player moves to start the game. This data just lets us place the player in the same spot in a new scene
         this.initialPos = [data.playerX, data.playerY];
     }
 
@@ -50,6 +51,7 @@ class Play extends Phaser.Scene {
         this.spawnDelay = 4000; // in milliseconds
         this.obstacleSpeed = 100;
         this.score = 0;
+        this.lateText = null;
         this.thresholds = [50, 100, 150, 200, 250]; // When player reaches a score in this array, speed increases
 
         //player is created here
