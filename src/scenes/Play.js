@@ -3,19 +3,32 @@ class Play extends Phaser.Scene {
         super("Play");
     }
 
+    init(data){
+        this.initialPos = [data.playerX, data.playerY];
+    }
+
     preload() {
         //load images here
         this.load.path = "./assets/"; // set path so that it's easier to type the strings when loading
-        this.load.image('playerCube', 'carPink.png');
         this.load.image('obstacle', 'carGray.png');
         this.load.image('slowZone', 'slowZoneRed.png');
         this.load.image('late', 'youreLate.png');
         //load sprite sheets
         this.load.spritesheet('rolltateLeft', 'pinkCubeSpriteSheetLeft.png', {frameWidth: 48, frameHeight: 48, startFrame: 0, endFrame: 11});
         this.load.spritesheet('rolltate', 'pinkCubeSpriteSheetLeft.png', {frameWidth: 48, frameHeight: 48, startFrame: 0, endFrame: 11});
+
+        this.textConfig = {
+            fontFamily: 'PixelFont',
+            fontSize: '48px',
+            color: '#FFFFFF',
+            align: 'left',
+            stroke: '#10141f',
+            strokeThickness: 6
+        }
     }
 
     create() {
+        console.log("In Play");
         //set values of top bounding line
         this.blx1 = 540;
         this.bly1 = 0;
@@ -34,11 +47,16 @@ class Play extends Phaser.Scene {
         this.blRx2 = 0;
         this.blRy2 = 374.123;
 
-        this.timerDelay = 4000; // in milliseconds
+        this.spawnDelay = 4000; // in milliseconds
         this.obstacleSpeed = 100;
+        this.score = 0;
+        this.thresholds = [50, 100, 150, 200, 250]; // When player reaches a score in this array, speed increases
 
         //player is created here
-        this.player = new Cube(this, this.game.config.width/3, this.game.config.height/3 * 2, 'playerCube').setOrigin(1,0);
+        this.player = new Cube(this, this.initialPos[0], this.initialPos[1], 'playerCube').setOrigin(1,0);
+        this.background = this.add.image(0, 0, 'background').setOrigin(0,0).setDepth(0);
+        this.scoreText = this.add.text(150, 50, this.score, this.textConfig).setOrigin(0.5);
+        
 
         //creates red line and circle
         this.graphics = this.add.graphics();
@@ -78,14 +96,27 @@ class Play extends Phaser.Scene {
 
         this.generateObstacles();
         // Timer for how often obstacles should start spawning
-        this.timer = this.time.addEvent({
-            delay: this.timerDelay, 
+        this.spawnTimer = this.time.addEvent({
+            delay: this.spawnDelay, 
             callback: function() { 
-                if(this.gameOverCheck()) this.generateObstacles(); 
+                this.generateObstacles(); 
             },
             loop: true,
             callbackScope: this
-          })
+        })
+        // Every second, add to the score
+        this.scoreTimer = this.time.addEvent({
+            delay: 1000, 
+            callback: function() {
+                if(this.gameOverCheck()){
+                    this.incrementScore(1);
+                    // Increment speed based on current score
+                    if(this.thresholds.includes(this.score)) this.incrementSpeed();
+                }    
+            },
+            loop: true,
+            callbackScope: this
+        })
     }
 
     update(time, delta) {
@@ -96,11 +127,8 @@ class Play extends Phaser.Scene {
             this.player.update(delta);
             if(Phaser.Input.Keyboard.JustDown(keyR)) this.incrementSpeed();
         } else {
-            //temp game over screen
-            this.add.image(0,0,'late').setOrigin(0,0).setDepth(1000);
-            if(keyR.isDown) {
-                this.scene.restart();
-            }
+            if(this.lateText==null) this.lateText = this.add.image(0,0,'late').setOrigin(0,0).setDepth(1000);
+            if(keyR.isDown) this.scene.restart();
         }
 
         //enables collision between obstacles and players
@@ -165,13 +193,20 @@ class Play extends Phaser.Scene {
 
     // When we increment the speed, change the movespeed of all obstacles, player, and spawning timer
     incrementSpeed(){
-        console.log("Incrementing speed");
-        this.obstacleSpeed += 25; // This changes the speed for FUTURE obstacles
+        // console.log("Incrementing speed");
+        this.obstacleSpeed += 25; // Changes the speed for FUTURE obstacles
         Phaser.Actions.Call(this.obstacleGroup.getChildren(), function(obstacle) {
             obstacle.movespeed = this.obstacleSpeed; // Changes the speed of CURRENT obstacles
         }, this);
         this.player.movespeed += 10;
-        this.timer.delay -= 500;
+        this.spawnTimer.delay -= 500;
+    }
+
+    incrementScore(score){
+        // console.log("Incrementing score");
+        this.score += score;
+        this.scoreText.text = this.score;
+        if (this.score > highscore) highscore = this.score;
     }
 
     //credit: Coding Hub 

@@ -4,14 +4,17 @@ class Cube extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.body.setCircle(23, 0, 0);
+        this.inMenu = false;
         this.movespeed = 100;
     }
 
     update(delta) {
-        this.x += 1.75/8 * this.movespeed * delta;
-        this.y -= 1/8 * this.movespeed * delta;
         this.setDepth(this.y + 14);
-
+        if(!this.inMenu){ // If player is in the menu, don't move forward
+            this.x += 1.75/8 * this.movespeed * delta;
+            this.y -= 1/8 * this.movespeed * delta;
+            
+        }
         if(keyLEFT.isDown) {
             this.x -= 1.75 * (this.movespeed/1.5) * delta;
             this.y -= 1 * (this.movespeed/1.5) * delta;

@@ -1,8 +1,8 @@
 let config = {
-    type: Phaser.CANVAS,
+    type: Phaser.AUTO,
     width: 1080,
     height: 480,
-    autoCenter: true,
+    pixelArt: true,
     physics: {
         default: 'arcade',
         arcade: {
@@ -11,11 +11,11 @@ let config = {
             debug: true         
         }
     },
-    scene: [Play],
+    scene: [Menu, Play]
 }
 // Get the yaml stuff as quick as possible
 let obstacleYAML;
-getYAML();
+loadResources();
 
 let game = new Phaser.Game(config)
 
@@ -23,9 +23,10 @@ let game = new Phaser.Game(config)
 let keyLEFT, keyRIGHT, keyR;
 
 let obstacleTotal = 0;
-let debugCheck = true;
+let debugCheck = false;
+let highscore = 0;
 
-async function getYAML(){
+async function loadResources(){
     const yaml = await fetch("./src/obstacles.yaml");
     const yamlText = await yaml.text();
     obstacleYAML = jsyaml.load(yamlText);
