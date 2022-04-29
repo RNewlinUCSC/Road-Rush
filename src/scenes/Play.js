@@ -12,11 +12,8 @@ class Play extends Phaser.Scene {
         //load images here
         this.load.path = "./assets/"; // set path so that it's easier to type the strings when loading
         this.load.image('obstacle', 'carGray.png');
-        this.load.image('slowZone', 'slowZoneRed.png');
         this.load.image('late', 'youreLate.png');
         //load sprite sheets
-        this.load.spritesheet('rolltateLeft', 'pinkCubeSpriteSheetLeft.png', {frameWidth: 48, frameHeight: 48, startFrame: 0, endFrame: 11});
-        this.load.spritesheet('rolltate', 'pinkCubeSpriteSheetLeft.png', {frameWidth: 48, frameHeight: 48, startFrame: 0, endFrame: 11});
 
         this.textConfig = {
             fontFamily: 'PixelFont',
@@ -36,17 +33,17 @@ class Play extends Phaser.Scene {
         this.blx2 = 1080;
         this.bly2 = 311.769;
 
-        //set values of left bounding line
-        this.blLx1 = 540;
+        //set values of right bounding line *variable names don't match
+        this.blLx1 = 522.681;
         this.blLy1 = 480;
         this.blLx2 = 1080;
-        this.blLy2 = 480-311.769;
+        this.blLy2 = 158.231;
 
-        //set values of right bounding line
-        this.blRx1 = 648;
+        //set values of left bounding line *variable names don't match
+        this.blRx1 = 665.321;
         this.blRy1 = 0;
         this.blRx2 = 0;
-        this.blRy2 = 374.123;
+        this.blRy2 = 384.123;
 
         this.spawnDelay = 4000; // in milliseconds
         this.obstacleSpeed = 100;
@@ -60,12 +57,12 @@ class Play extends Phaser.Scene {
         this.scoreText = this.add.text(150, 50, this.score, this.textConfig).setOrigin(0.5);
         
 
-        //creates red line and circle
+        //creates red line for debug
         this.graphics = this.add.graphics();
         //this.line = new Phaser.Geom.Line(320, 0, 640, 184.752);  //line for 480x640
         this.line = new Phaser.Geom.Line(this.blx1, this.bly1, this.blx2, this.bly2);
-        this.line2 = new Phaser.Geom.Line(540, 480, 1080, 480-311.769);
-        this.line3 = new Phaser.Geom.Line(648, 0, 0, 374.123)
+        this.line2 = new Phaser.Geom.Line(this.blLx1, this.blLy1, this.blLx2, this.blLy2);
+        this.line3 = new Phaser.Geom.Line(this.blRx1, this.blRy1, this.blRx2, this.blRy2);
         this.graphics.lineStyle(2, 0xff0000);
         //removes lines if debug is turned off *the variable
         if(debugCheck) {
@@ -142,12 +139,11 @@ class Play extends Phaser.Scene {
             this.player.y += 1/4 * this.player.movespeed * delta;
         }
         if(this.collisionLeftBoundingLine()){
-            this.player.x -= 1.75 * this.player.movespeed * delta
-            this.player.y += 1 * this.player.movespeed * delta;
-        }else if(this.collisionRightBoundingLine()){
-            this.player.x -= 1.75 * this.player.movespeed * delta;
-            this.player.y += 1 * this.player.movespeed * delta; 
-        }
+            rightCheck = false;
+        }else {rightCheck = true;}
+        if(this.collisionRightBoundingLine()){
+            leftCheck = false;
+        }else {leftCheck = true;}
     }
 
     //function to pass if the player collides with an obstacle
@@ -244,7 +240,7 @@ class Play extends Phaser.Scene {
         this.side2 = Math.sqrt(Math.pow(this.player.x - this.blLx2,2) + Math.pow(this.player.y - this.blLy2,2));
         this.base = Math.sqrt(Math.pow(this.blLx2 - this.blLx1,2) + Math.pow(this.blLy2 - this.blLy1,2));
     
-        if(20 > this.side1 || 20 > this.side2)
+        if(44 > this.side1 || 44 > this.side2)
             return true;
     
         this.angle1 = Math.atan2( this.blLx2 - this.blLx1, this.blLy2 - this.blLy1 ) - Math.atan2( this.player.x - this.b1Lx1, this.player.y - this.blLy1 ); // Some complicated Math
@@ -259,7 +255,7 @@ class Play extends Phaser.Scene {
             this.areaOfTriangle = Math.sqrt( this.semiperimeter * (this.semiperimeter - this.side1) * (this.semiperimeter - this.side2) * (this.semiperimeter - this.base) ); // Heron's formula for the area
             this.height = 2*this.areaOfTriangle/this.base;
     
-            if( this.height < 20 )
+            if( this.height < 44 )
                 return true;
             else
                 return false;
@@ -271,7 +267,7 @@ class Play extends Phaser.Scene {
         this.side2 = Math.sqrt(Math.pow(this.player.x - this.blRx2,2) + Math.pow(this.player.y - this.blRy2,2));
         this.base = Math.sqrt(Math.pow(this.blRx2 - this.blRx1,2) + Math.pow(this.blRy2 - this.blRy1,2));
     
-        if(20 > this.side1 || 20 > this.side2)
+        if(21 > this.side1 || 21 > this.side2)
             return true;
     
         this.angle1 = Math.atan2( this.blRx2 - this.blRx1, this.blRy2 - this.blRy1 ) - Math.atan2( this.player.x - this.b1Rx1, this.player.y - this.blRy1 ); // Some complicated Math
@@ -286,7 +282,7 @@ class Play extends Phaser.Scene {
             this.areaOfTriangle = Math.sqrt( this.semiperimeter * (this.semiperimeter - this.side1) * (this.semiperimeter - this.side2) * (this.semiperimeter - this.base) ); // Heron's formula for the area
             this.height = 2*this.areaOfTriangle/this.base;
     
-            if( this.height < 20 )
+            if( this.height < 21 )
                 return true;
             else
                 return false;

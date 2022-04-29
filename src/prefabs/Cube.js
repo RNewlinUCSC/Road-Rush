@@ -15,12 +15,12 @@ class Cube extends Phaser.Physics.Arcade.Sprite {
             this.y -= 1/8 * this.movespeed * delta;
             
         }
-        if(keyLEFT.isDown) {
+        if(keyLEFT.isDown && leftCheck) {
             this.x -= 1.75 * (this.movespeed/1.5) * delta;
             this.y -= 1 * (this.movespeed/1.5) * delta;
         }
 
-        if(keyRIGHT.isDown) {
+        if(keyRIGHT.isDown && rightCheck) {
             this.x += 1.75 * (this.movespeed/1.5) * delta;
             this.y += 1 * (this.movespeed/1.5) * delta;
         }

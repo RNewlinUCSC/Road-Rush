@@ -11,7 +11,7 @@ let config = {
             debug: true         
         }
     },
-    scene: [Menu, Play]
+    scene: [Menu, Play, Credits]
 }
 // Get the yaml stuff as quick as possible
 let obstacleYAML;
@@ -20,11 +20,13 @@ loadResources();
 let game = new Phaser.Game(config)
 
 // reserve inputs
-let keyLEFT, keyRIGHT, keyR;
+let keyLEFT, keyRIGHT, keyR, keyC, keyP;
 
 let obstacleTotal = 0;
-let debugCheck = false;
+let debugCheck = true;
 let highscore = 0;
+let leftCheck = true;
+let rightCheck = true;
 
 async function loadResources(){
     const yaml = await fetch("./src/obstacles.yaml");
