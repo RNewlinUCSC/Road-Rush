@@ -5,13 +5,14 @@ class Play extends Phaser.Scene {
 
     preload() {
         //load images here
-        this.load.image('playerCube', './assets/playerCube.png');
-        this.load.image('obstacle', './assets/obstacleCube.png');
-        this.load.image('slowZone', './assets/slowZoneRed.png');
-        this.load.image('late', './assets/youreLate.png');
+        this.load.path = "./assets/"; // set path so that it's easier to type the strings when loading
+        this.load.image('playerCube', 'carPink.png');
+        this.load.image('obstacle', 'carGray.png');
+        this.load.image('slowZone', 'slowZoneRed.png');
+        this.load.image('late', 'youreLate.png');
         //load sprite sheets
-        this.load.spritesheet('rolltateLeft', './assets/pinkCubeSpriteSheetLeft.png', {frameWidth: 48, frameHeight: 48, startFrame: 0, endFrame: 11});
-        this.load.spritesheet('rolltate', './assets/pinkCubeSpriteSheetLeft.png', {frameWidth: 48, frameHeight: 48, startFrame: 0, endFrame: 11});
+        this.load.spritesheet('rolltateLeft', 'pinkCubeSpriteSheetLeft.png', {frameWidth: 48, frameHeight: 48, startFrame: 0, endFrame: 11});
+        this.load.spritesheet('rolltate', 'pinkCubeSpriteSheetLeft.png', {frameWidth: 48, frameHeight: 48, startFrame: 0, endFrame: 11});
     }
 
     create() {
@@ -34,7 +35,7 @@ class Play extends Phaser.Scene {
         this.blRy2 = 374.123;
 
         this.timerDelay = 4000; // in milliseconds
-        this.timer = 0;
+        this.obstacleSpeed = 100;
 
         //player is created here
         this.player = new Cube(this, this.game.config.width/3, this.game.config.height/3 * 2, 'playerCube').setOrigin(1,0);
@@ -87,17 +88,13 @@ class Play extends Phaser.Scene {
           })
     }
 
-    //function to spawn a new obstacle
-    spawnObstacle(random) {
-        let enemy = new Obstacle(this, this.spawnX + (random * 21), this.spawnY + (random * 12), 'obstacle').setOrigin(1,0);
-        this.obstacleGroup.add(enemy);
-    }
-
-
-    update() {
+    update(time, delta) {
+        // Delta is the amount of time since the previous update() call. Using this with the movement makes the game consistent across all framerates
+        delta = delta/1000 // Turn delta into milliseconds
         //if gameover is triggered player movement is disabled
         if(this.gameOverCheck()) {
-            this.player.update();
+            this.player.update(delta);
+            if(Phaser.Input.Keyboard.JustDown(keyR)) this.incrementSpeed();
         } else {
             //temp game over screen
             this.add.image(0,0,'late').setOrigin(0,0).setDepth(1000);
@@ -106,31 +103,20 @@ class Play extends Phaser.Scene {
             }
         }
 
-            //if gameover is triggered player movement is disabled
-            if(this.gameOverCheck()) {
-                this.player.update();
-            }else {
-                //temp game over screen
-                this.add.image(0,0,'late').setOrigin(0,0).setDepth(1000);
-                if(keyR.isDown) {                       //Restart level
-                    this.scene.restart();
-                }
-            }
-
         //enables collision between obstacles and players
         this.physics.world.collide(this.player, this.obstacleGroup, this.playerCollision, null, this);
 
         //calls the function that calculates if the player is touching a bounding line, and then slows the player down if true
         if(this.collisionCircleLine()){
-            this.player.x -= 1.75/4;
-            this.player.y += 1/4;
+            this.player.x -= 1.75/4 * this.player.movespeed * delta;
+            this.player.y += 1/4 * this.player.movespeed * delta;
         }
         if(this.collisionLeftBoundingLine()){
-            this.player.x -= 1.75;
-            this.player.y += 1;
+            this.player.x -= 1.75 * this.player.movespeed * delta
+            this.player.y += 1 * this.player.movespeed * delta;
         }else if(this.collisionRightBoundingLine()){
-            this.player.x -= 1.75;
-            this.player.y += 1;
+            this.player.x -= 1.75 * this.player.movespeed * delta;
+            this.player.y += 1 * this.player.movespeed * delta; 
         }
     }
 
@@ -168,13 +154,24 @@ class Play extends Phaser.Scene {
             let column = 0;
             for(const digit of splitRow){
                 if(digit == '1'){
-                    let obstacle = new Obstacle(this, initialPos[0]+(48*column)+(48*row), initialPos[1]+(27*column)-(27*row), 'obstacle', 0).setOrigin(0.5);
+                    let obstacle = new Obstacle(this, initialPos[0]+(48*column)+(48*row), initialPos[1]+(27*column)-(27*row), 'obstacle', 0, this.obstacleSpeed);
                     this.obstacleGroup.add(obstacle);
                 }
                 column++;
             }
             row++;
         }
+    }
+
+    // When we increment the speed, change the movespeed of all obstacles, player, and spawning timer
+    incrementSpeed(){
+        console.log("Incrementing speed");
+        this.obstacleSpeed += 25; // This changes the speed for FUTURE obstacles
+        Phaser.Actions.Call(this.obstacleGroup.getChildren(), function(obstacle) {
+            obstacle.movespeed = this.obstacleSpeed; // Changes the speed of CURRENT obstacles
+        }, this);
+        this.player.movespeed += 10;
+        this.timer.delay -= 500;
     }
 
     //credit: Coding Hub 
