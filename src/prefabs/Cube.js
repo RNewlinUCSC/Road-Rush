@@ -6,6 +6,7 @@ class Cube extends Phaser.Physics.Arcade.Sprite {
         this.body.setCircle(23, 0, 0);
         this.inMenu = false;
         this.movespeed = 100;
+        this.chargeTotal = 100;
     }
 
     update(delta) {
@@ -16,13 +17,13 @@ class Cube extends Phaser.Physics.Arcade.Sprite {
             
         }
         if(keyLEFT.isDown && leftCheck) {
-            this.x -= 1.75 * (this.movespeed/1.5) * delta;
-            this.y -= 1 * (this.movespeed/1.5) * delta;
+            this.x -= 1.75 * (this.movespeed/1.2) * delta;
+            this.y -= 1 * (this.movespeed/1.2) * delta;
         }
 
         if(keyRIGHT.isDown && rightCheck) {
-            this.x += 1.75 * (this.movespeed/1.5) * delta;
-            this.y += 1 * (this.movespeed/1.5) * delta;
+            this.x += 1.75 * (this.movespeed/1.2) * delta;
+            this.y += 1 * (this.movespeed/1.2) * delta;
         }
     }
 }

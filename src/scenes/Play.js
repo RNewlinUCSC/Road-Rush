@@ -13,6 +13,7 @@ class Play extends Phaser.Scene {
         this.load.path = "./assets/"; // set path so that it's easier to type the strings when loading
         this.load.image('obstacle', 'carGray.png');
         this.load.image('late', 'youreLate.png');
+        this.load.image('charge', 'charge.png');
         //load sprite sheets
 
         this.textConfig = {
@@ -79,6 +80,9 @@ class Play extends Phaser.Scene {
         this.obstacleGroup = this.add.group({
             runChildUpdate: true
         })
+        this.chargeGroup = this.add.group({
+            runChildUpdate: true
+        })
 
         this.generateObstacles();
         // Timer for how often obstacles should start spawning
@@ -103,10 +107,14 @@ class Play extends Phaser.Scene {
             loop: true,
             callbackScope: this
         })
+
+
     }
 
     update(time, delta) {
-        console.log(this.obstacleSpeed);
+        console.log(this.player.chargeTotal);
+        this.physics.add.overlap(this.player, this.chargeGroup, this.chargeCollision, null, this);
+
         // Delta is the amount of time since the previous update() call. Using this with the movement makes the game consistent across all framerates
         delta = delta/1000 // Turn delta into milliseconds
         //if gameover is triggered player movement is disabled
@@ -122,6 +130,7 @@ class Play extends Phaser.Scene {
 
         //enables collision between obstacles and players
         this.physics.world.collide(this.player, this.obstacleGroup, this.playerCollision, null, this);
+        this.physics.world.collide(this.player, this.chargeGroup, this.chargeCollision, null, this);
 
         //calls the function that calculates if the player is touching a bounding line, and then slows the player down if true
         if(this.collisionCircleLine()){
@@ -140,6 +149,12 @@ class Play extends Phaser.Scene {
     playerCollision() {
         this.player.x -= 1.75/8;
         this.player.y += 1/8;
+    }
+
+    chargeCollision(player, charge) {
+        charge.destroy();
+        player.chargeTotal += 10;
+        this.score += 100;
     }
 
     //returns true if the player goes off the bottom or left of the screen
@@ -172,6 +187,10 @@ class Play extends Phaser.Scene {
                 if(digit == '1'){
                     let obstacle = new Obstacle(this, initialPos[0]+(48*column)+(48*row), initialPos[1]+(27*column)-(27*row), 'obstacle', 0, this.obstacleSpeed);
                     this.obstacleGroup.add(obstacle);
+                }
+                if(digit == '2'){
+                    let charge = new Charge(this, initialPos[0]+(48*column)+(48*row), initialPos[1]+(27*column)-(27*row), 'charge', 0, this.obstacleSpeed);
+                    this.chargeGroup.add(charge);
                 }
                 column++;
             }

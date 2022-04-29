@@ -2,13 +2,14 @@ let config = {
     type: Phaser.AUTO,
     width: 1080,
     height: 480,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
     pixelArt: true,
     physics: {
         default: 'arcade',
         arcade: {
             gravity: { y: 0 },
             fps: 30,
-            debug: true         
+            debug: false         
         }
     },
     scene: [Menu, Play, Credits]
@@ -23,7 +24,7 @@ let game = new Phaser.Game(config)
 let keyLEFT, keyRIGHT, keyR, keyC, keyP;
 
 let obstacleTotal = 0;
-let debugCheck = true;
+let debugCheck = false;     //set false to remove red lines
 let highscore = 0;
 let leftCheck = true;
 let rightCheck = true;
