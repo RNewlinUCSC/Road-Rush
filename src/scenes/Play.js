@@ -45,7 +45,7 @@ class Play extends Phaser.Scene {
         this.blRx2 = 0;
         this.blRy2 = 384.123;
 
-        this.spawnDelay = 4000; // in milliseconds
+        this.spawnDelay = 2200; // in milliseconds
         this.obstacleSpeed = 100;
         this.score = 0;
         this.lateText = null;
@@ -57,9 +57,8 @@ class Play extends Phaser.Scene {
         this.scoreText = this.add.text(150, 50, this.score, this.textConfig).setOrigin(0.5);
         
 
-        //creates red line for debug
+        //creates red lines for debug
         this.graphics = this.add.graphics();
-        //this.line = new Phaser.Geom.Line(320, 0, 640, 184.752);  //line for 480x640
         this.line = new Phaser.Geom.Line(this.blx1, this.bly1, this.blx2, this.bly2);
         this.line2 = new Phaser.Geom.Line(this.blLx1, this.blLy1, this.blLx2, this.blLy2);
         this.line3 = new Phaser.Geom.Line(this.blRx1, this.blRy1, this.blRx2, this.blRy2);
@@ -75,18 +74,6 @@ class Play extends Phaser.Scene {
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
-
-        //animation config
-        this.anims.create({
-            key: 'rolltate',
-            frames: this.anims.generateFrameNumbers('rolltate', { start: 0, end: 11, first: 0}),
-            frameRate: 30
-        });
-        this.anims.create({
-            key: 'rolltateLeft',
-            frames: this.anims.generateFrameNumbers('rolltateLeft', { start: 0, end: 11, first: 0}),
-            frameRate: 30
-        });
 
         //Obstacles group is created
         this.obstacleGroup = this.add.group({
@@ -119,12 +106,15 @@ class Play extends Phaser.Scene {
     }
 
     update(time, delta) {
+        console.log(this.obstacleSpeed);
         // Delta is the amount of time since the previous update() call. Using this with the movement makes the game consistent across all framerates
         delta = delta/1000 // Turn delta into milliseconds
         //if gameover is triggered player movement is disabled
         if(this.gameOverCheck()) {
             this.player.update(delta);
-            if(Phaser.Input.Keyboard.JustDown(keyR)) this.incrementSpeed();
+            if(this.obstacleSpeed < 220) {
+            this.incrementSpeed();
+            }
         } else {
             if(this.lateText==null) this.lateText = this.add.image(0,0,'late').setOrigin(0,0).setDepth(1000);
             if(keyR.isDown) this.scene.restart();
@@ -192,12 +182,12 @@ class Play extends Phaser.Scene {
     // When we increment the speed, change the movespeed of all obstacles, player, and spawning timer
     incrementSpeed(){
         // console.log("Incrementing speed");
-        this.obstacleSpeed += 25; // Changes the speed for FUTURE obstacles
+        this.obstacleSpeed += .02; // Changes the speed for FUTURE obstacles
         Phaser.Actions.Call(this.obstacleGroup.getChildren(), function(obstacle) {
             obstacle.movespeed = this.obstacleSpeed; // Changes the speed of CURRENT obstacles
         }, this);
-        this.player.movespeed += 10;
-        this.spawnTimer.delay -= 500;
+        //this.player.movespeed += .01;
+        this.spawnTimer.delay -= .2;
     }
 
     incrementScore(score){

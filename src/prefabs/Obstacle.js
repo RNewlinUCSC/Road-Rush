@@ -19,7 +19,7 @@ class Obstacle extends Phaser.Physics.Arcade.Sprite {
     }
 
     destroyObstacle() {
-        if(this.x < 0) {
+        if(this.x < -20) {
             this.destroy();
             obstacleTotal--;
         }
