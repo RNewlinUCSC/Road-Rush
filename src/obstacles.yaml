@@ -3,6 +3,7 @@ ObstacleTest: null #Add the key of the obstacle you want to test. If not testing
 # Each obstacle's key should be unique
 # 0 = Empty space
 # 1 = Obstacle
+# 2 = Charge
 obstacle1: 
   - 0, 1, 0, 1, 0, 1, 0
   - 0, 0, 0, 0, 0, 0, 0
