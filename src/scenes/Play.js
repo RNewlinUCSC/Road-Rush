@@ -12,9 +12,9 @@ class Play extends Phaser.Scene {
         //load images here
         this.load.path = "./assets/"; // set path so that it's easier to type the strings when loading
         this.load.image('obstacle', 'carGray.png');
-        this.load.image('late', 'youreLate.png');
         this.load.image('charge', 'charge.png');
         //load sprite sheets
+        this.load.spritesheet('lateText', 'lateSheet.png', {frameWidth: 448, frameHeight: 96, startFrame: 0, endFrame: 30});
 
         this.textConfig = {
             fontFamily: 'PixelFont',
@@ -76,6 +76,13 @@ class Play extends Phaser.Scene {
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
+        //animation config
+        this.anims.create({
+            key: 'late',
+            frames: this.anims.generateFrameNumbers('lateText', { start: 0, end: 29, first: 0}),
+            frameRate: 30
+        });
+
         //Obstacles group is created
         this.obstacleGroup = this.add.group({
             runChildUpdate: true
@@ -131,11 +138,33 @@ class Play extends Phaser.Scene {
         if(this.gameOverCheck()) {
             this.player.update(delta);
             if(this.obstacleSpeed < 220) {
-            this.incrementSpeed();
+                this.incrementSpeed();
             }
         } else {
-            if(this.lateText==null) this.lateText = this.add.image(0,0,'late').setOrigin(0,0).setDepth(1000);
             if(keyR.isDown) this.scene.restart();
+            if(this.lateText == null){
+                // When it's gameover, play animation for late text
+                this.scoreText.alpha = 0;
+                this.add.rectangle(0, 0, game.config.width, game.config.height, "#000000", 0.5).setOrigin(0).setDepth(999);
+                this.lateText = this.add.sprite(game.config.width-300, 100, 'lateText').setOrigin(0.5).setDepth(1000);
+                this.lateText.anims.play('late');
+                this.lateText.on('animationcomplete', () => { 
+                    // after text animation, add score and instructions for restarting
+                    this.textConfig.fontSize = "32px";
+                    let highScore = this.add.text(game.config.width+300, 300, `highscore: ${highscore}`, this.textConfig).setOrigin(0.5).setDepth(1000);
+                    let instructions = this.add.text(game.config.width+300, 350, `press (r) to restart`, this.textConfig).setOrigin(0.5).setDepth(1000);
+                    // smooth animation for text position
+                    this.tweens.add({
+                        targets: [highScore, instructions],
+                        alpha: {from: 0, to: 1},
+                        x: {from: game.config.width+300, to: game.config.width-300},
+                        ease: "Sine.easeInOut",
+                        duration: 500,
+                        repeat: 0,
+                        yoyo: false
+                    })
+                })    
+            }
         }
 
         //enables collision between obstacles and players
