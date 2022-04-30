@@ -27,7 +27,6 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        console.log("In Play");
         //set values of top bounding line
         this.blx1 = 540;
         this.bly1 = 0;
@@ -50,12 +49,13 @@ class Play extends Phaser.Scene {
         this.obstacleSpeed = 100;
         this.score = 0;
         this.lateText = null;
-        this.thresholds = [50, 100, 150, 200, 250]; // When player reaches a score in this array, speed increases
 
         //player is created here
         this.player = new Cube(this, this.initialPos[0], this.initialPos[1], 'playerCube').setOrigin(1,0);
         this.background = this.add.image(0, 0, 'background').setOrigin(0,0).setDepth(0);
         this.scoreText = this.add.text(150, 50, this.score, this.textConfig).setOrigin(0.5);
+        this.BattUI = this.add.text(900, 360, 'battery', this.textConfig).setOrigin(0.5);
+        this.battText = this.add.text(980, 400, this.player.chargeTotal, this.textConfig).setOrigin(0.5);
         
 
         //creates red lines for debug
@@ -100,8 +100,19 @@ class Play extends Phaser.Scene {
             callback: function() {
                 if(this.gameOverCheck()){
                     this.incrementScore(1);
-                    // Increment speed based on current score
-                    if(this.thresholds.includes(this.score)) this.incrementSpeed();
+                }    
+            },
+            loop: true,
+            callbackScope: this
+        })
+
+        this.batteryTimer = this.time.addEvent({
+            delay: 800, 
+            callback: function() {
+                if(this.gameOverCheck()){
+                    if(this.player.chargeTotal > 0) {
+                    this.player.chargeTotal -= 1;
+                    }
                 }    
             },
             loop: true,
@@ -112,7 +123,6 @@ class Play extends Phaser.Scene {
     }
 
     update(time, delta) {
-        console.log(this.player.chargeTotal);
         this.physics.add.overlap(this.player, this.chargeGroup, this.chargeCollision, null, this);
 
         // Delta is the amount of time since the previous update() call. Using this with the movement makes the game consistent across all framerates
@@ -143,6 +153,10 @@ class Play extends Phaser.Scene {
         if(this.collisionRightBoundingLine()){
             leftCheck = false;
         }else {leftCheck = true;}
+
+        if(this.player.chargeTotal >= 0) {
+            this.updateBattery();
+        }
     }
 
     //function to pass if the player collides with an obstacle
@@ -153,7 +167,7 @@ class Play extends Phaser.Scene {
 
     chargeCollision(player, charge) {
         charge.destroy();
-        player.chargeTotal += 10;
+        player.chargeTotal += 5;
         this.score += 100;
     }
 
@@ -189,8 +203,10 @@ class Play extends Phaser.Scene {
                     this.obstacleGroup.add(obstacle);
                 }
                 if(digit == '2'){
+                    if(this.player.chargeTotal < 60) {
                     let charge = new Charge(this, initialPos[0]+(48*column)+(48*row), initialPos[1]+(27*column)-(27*row), 'charge', 0, this.obstacleSpeed);
                     this.chargeGroup.add(charge);
+                    }
                 }
                 column++;
             }
@@ -201,7 +217,7 @@ class Play extends Phaser.Scene {
     // When we increment the speed, change the movespeed of all obstacles, player, and spawning timer
     incrementSpeed(){
         // console.log("Incrementing speed");
-        this.obstacleSpeed += .02; // Changes the speed for FUTURE obstacles
+        this.obstacleSpeed += .04; // Changes the speed for FUTURE obstacles
         Phaser.Actions.Call(this.obstacleGroup.getChildren(), function(obstacle) {
             obstacle.movespeed = this.obstacleSpeed; // Changes the speed of CURRENT obstacles
         }, this);
@@ -214,6 +230,10 @@ class Play extends Phaser.Scene {
         this.score += score;
         this.scoreText.text = this.score;
         if (this.score > highscore) highscore = this.score;
+    }
+
+    updateBattery(){
+        this.battText.setText(this.player.chargeTotal);
     }
 
     //credit: Coding Hub 
