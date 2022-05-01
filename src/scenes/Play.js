@@ -9,6 +9,10 @@ class Play extends Phaser.Scene {
     }
 
     preload() {
+        //load audio
+        this.load.audio('music', './assets/roadRushBGM.wav');
+        this.load.audio('honk', './assets/hornSFX.wav')
+
         //load images here
         this.load.path = "./assets/"; // set path so that it's easier to type the strings when loading
         this.load.image('obstacle', 'carGray.png');
@@ -27,6 +31,11 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        //add music
+        var backgroundMusic = this.sound.add('music');
+        backgroundMusic.loop = true; 
+        backgroundMusic.play();
+
         //set values of top bounding line
         this.blx1 = 540;
         this.bly1 = 0;
@@ -107,7 +116,10 @@ class Play extends Phaser.Scene {
             callback: function() {
                 if(this.gameOverCheck()){
                     this.incrementScore(1);
-                }    
+                    
+
+                }
+                
             },
             loop: true,
             callbackScope: this
@@ -143,6 +155,10 @@ class Play extends Phaser.Scene {
         } else {
             if(keyR.isDown) this.scene.restart();
             if(this.lateText == null){
+                //end song and gameover SFX
+                this.game.sound.stopAll();
+                this.sound.play('honk');
+                
                 // When it's gameover, play animation for late text
                 this.scoreText.alpha = 0;
                 this.add.rectangle(0, 0, game.config.width, game.config.height, "#000000", 0.5).setOrigin(0).setDepth(999);
@@ -190,8 +206,11 @@ class Play extends Phaser.Scene {
 
     //function to pass if the player collides with an obstacle
     playerCollision() {
+        
+        //this.sound.play('honk');
         this.player.x -= 1.75/8;
         this.player.y += 1/8;
+        return true;
     }
 
     chargeCollision(player, charge) {
@@ -259,6 +278,7 @@ class Play extends Phaser.Scene {
         this.score += score;
         this.scoreText.text = this.score;
         if (this.score > highscore) highscore = this.score;
+
     }
 
     updateBattery(){

@@ -3,7 +3,9 @@ class Menu extends Phaser.Scene {
         super("Menu");
     }
     preload(){
+        
         this.load.path = "./assets/";
+        this.load.audio('sfx_select', 'selectSFX.wav');
         this.load.image('playerCube', 'carPink.png');
         this.load.image('background', 'carRoad.png');
         this.load.image('menuSprites', 'menuSprites.png');
@@ -52,6 +54,7 @@ class Menu extends Phaser.Scene {
             this.swappingScenes = true; 
             this.startRight.anims.play("startButton");
             this.startRight.on('animationcomplete', () => { 
+                this.sound.play('sfx_select');
                 this.switchScenes();
             })    
         } // Player moves left, play button animation and tween sprites
@@ -60,6 +63,7 @@ class Menu extends Phaser.Scene {
             this.swappingScenes = true;
             this.startLeft.anims.play("startButton");
             this.startLeft.on('animationcomplete', () => { 
+                this.sound.play('sfx_select');
                 this.switchScenes();
             })    
         }
@@ -76,6 +80,7 @@ class Menu extends Phaser.Scene {
             yoyo: false
         })
         this.tween.on('complete', () => {
+            
             this.scene.start("Play", {playerX: this.player.x, playerY: this.player.y});
         });
     }
