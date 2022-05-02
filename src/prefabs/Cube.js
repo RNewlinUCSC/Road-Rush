@@ -20,13 +20,19 @@ class Cube extends Phaser.Physics.Arcade.Sprite {
             }
         }
         if((keyLEFT.isDown && leftCheck) || (game.input.activePointer.isDown && game.input.activePointer.x < 540 && leftCheck)) {
+            this.play('left', 1, true);
             this.x -= 1.75 * (this.movespeed/1.2) * delta;
             this.y -= 1 * (this.movespeed/1.2) * delta;
         }
 
         if((keyRIGHT.isDown && rightCheck) || (game.input.activePointer.isDown && game.input.activePointer.x > 540 && rightCheck)) {
+            this.play('right', 1, true);
             this.x += 1.75 * (this.movespeed/1.2) * delta;
             this.y += 1 * (this.movespeed/1.2) * delta;
+        }
+
+        if(!keyLEFT.isDown && !keyRIGHT.isDown) {
+            this.play('center', 1, true);
         }
     }
 }
