@@ -23,6 +23,7 @@ class Play extends Phaser.Scene {
         this.load.image('charge', 'charge.png');
         //load sprite sheets
         this.load.spritesheet('lateText', 'lateSheet.png', {frameWidth: 448, frameHeight: 96, startFrame: 0, endFrame: 30});
+        this.load.spritesheet('pinkCar', 'pinkCarAtlas.png', {frameWidth: 48, frameHeight: 48, startFrame: 0, endFrame: 2});
         //this.load.spritesheet('uglyCars', 'uglyCarAtlas.png', {framewidth: 48, frameHeight: 48, startFrame: 0, endFrame: 7});
 
         this.textConfig = {
@@ -68,8 +69,24 @@ class Play extends Phaser.Scene {
         this.score = 0;
         this.lateText = null;
 
+        this.anims.create({
+            key: 'center',
+            frames: this.anims.generateFrameNumbers('pinkCar', { start: 0, end: 0, first: 0}),
+            frameRate: 1
+        });
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('pinkCar', { start: 1, end: 1, first: 1}),
+            frameRate: 1
+        });
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('pinkCar', { start: 2, end: 2, first: 2}),
+            frameRate: 1
+        });
+
         //player is created here
-        this.player = new Cube(this, this.initialPos[0], this.initialPos[1], 'playerCube').setOrigin(1,0);
+        this.player = new Cube(this, this.initialPos[0], this.initialPos[1], 'pinkCar', 0).setOrigin(1,0);
         this.background = this.add.image(0, 0, 'background').setOrigin(0,0).setDepth(0);
         this.scoreText = this.add.text(150, 50, this.score, this.textConfig).setOrigin(0.5).setDepth(1000);
         this.BattUI = this.add.text(910, 360, 'BATTERY', this.textConfig).setOrigin(0.5).setDepth(1000);
