@@ -186,7 +186,7 @@ class Play extends Phaser.Scene {
             }
         } else {
             this.player.destroy();
-            if(keyR.isDown) this.scene.restart();
+            if(keyR.isDown || game.input.activePointer.isDown) this.scene.restart();
             if(keyRIGHT.isDown) this.scene.start("Menu");
             if(this.lateText == null){
                 //end song and gameover SFX
