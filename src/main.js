@@ -24,7 +24,7 @@ let game = new Phaser.Game(config)
 let keyLEFT, keyRIGHT, keyR, keyC, keyP;
 
 let obstacleTotal = 0;
-let debugCheck = true;     //set false to remove red lines
+let debugCheck = false;     //set false to remove red lines
 let highscore = 0;
 let leftCheck = true;
 let rightCheck = true;

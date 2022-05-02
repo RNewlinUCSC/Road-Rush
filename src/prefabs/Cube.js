@@ -11,7 +11,9 @@ class Cube extends Phaser.Physics.Arcade.Sprite {
 
     update(delta) {
         this.setDepth(this.y + 14);
+        if(this.inMenu) this.anims.play('playerForward', 0, true);
         if(!this.inMenu){ // If player is in the menu, don't move forward
+            this.anims.play('playerForward', true);
             this.x += 1.75/8 * this.movespeed * delta;
             this.y -= 1/8 * this.movespeed * delta;
             if(this.chargeTotal <= 0) {
@@ -20,11 +22,13 @@ class Cube extends Phaser.Physics.Arcade.Sprite {
             }
         }
         if((keyLEFT.isDown && leftCheck) || (game.input.activePointer.isDown && game.input.activePointer.x < 540 && leftCheck)) {
+            this.anims.play('playerLeft', true);
             this.x -= 1.75 * (this.movespeed/1.2) * delta;
             this.y -= 1 * (this.movespeed/1.2) * delta;
         }
 
         if((keyRIGHT.isDown && rightCheck) || (game.input.activePointer.isDown && game.input.activePointer.x > 540 && rightCheck)) {
+            this.anims.play('playerRight', true);
             this.x += 1.75 * (this.movespeed/1.2) * delta;
             this.y += 1 * (this.movespeed/1.2) * delta;
         }

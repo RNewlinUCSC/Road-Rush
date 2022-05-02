@@ -9,21 +9,17 @@ class Play extends Phaser.Scene {
     }
 
     preload() {
-        //load audio
-        this.load.audio('music', './assets/roadRushBGM.wav');
-        this.load.audio('honk', './assets/hornSFX.wav')
-
         //load images here
         this.load.path = "./assets/"; // set path so that it's easier to type the strings when loading
         this.load.image('obstacle', 'carGray.png');
-        this.load.image('uglyCar0', 'uC0.png');
-        this.load.image('uglyCar1', 'uC1.png');
-        this.load.image('uglyCar2', 'uC2.png');
-        this.load.image('uglyCar3', 'uC3.png');
-        this.load.image('uglyCar4', 'uC4.png');
-        this.load.image('uglyCar5', 'uC5.png');
-        this.load.image('uglyCar6', 'uC6.png');
-        this.load.image('uglyCar7', 'uC7.png');
+        // this.load.image('uglyCar0', 'uC0.png');
+        // this.load.image('uglyCar1', 'uC1.png');
+        // this.load.image('uglyCar2', 'uC2.png');
+        // this.load.image('uglyCar3', 'uC3.png');
+        // this.load.image('uglyCar4', 'uC4.png');
+        // this.load.image('uglyCar5', 'uC5.png');
+        // this.load.image('uglyCar6', 'uC6.png');
+        // this.load.image('uglyCar7', 'uC7.png');
         this.load.image('charge', 'charge.png');
         //load sprite sheets
         this.load.spritesheet('lateText', 'lateSheet.png', {frameWidth: 448, frameHeight: 96, startFrame: 0, endFrame: 30});
@@ -46,7 +42,8 @@ class Play extends Phaser.Scene {
         backgroundMusic.play();
 
         //ugly car array
-        this.carList = ['uglyCar0','uglyCar1','uglyCar2','uglyCar3','uglyCar4','uglyCar5','uglyCar6','uglyCar7'];
+        // this.carList = ['uglyCar0','uglyCar1','uglyCar2','uglyCar3','uglyCar4','uglyCar5','uglyCar6','uglyCar7'];
+        this.carList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
         //set values of top bounding line
         this.blx1 = 360;
@@ -74,9 +71,9 @@ class Play extends Phaser.Scene {
         //player is created here
         this.player = new Cube(this, this.initialPos[0], this.initialPos[1], 'playerCube').setOrigin(1,0);
         this.background = this.add.image(0, 0, 'background').setOrigin(0,0).setDepth(0);
-        this.scoreText = this.add.text(150, 50, this.score, this.textConfig).setOrigin(0.5);
-        this.BattUI = this.add.text(900, 360, 'battery', this.textConfig).setOrigin(0.5);
-        this.battText = this.add.text(980, 400, this.player.chargeTotal, this.textConfig).setOrigin(0.5);
+        this.scoreText = this.add.text(150, 50, this.score, this.textConfig).setOrigin(0.5).setDepth(1000);
+        this.BattUI = this.add.text(910, 360, 'BATTERY', this.textConfig).setOrigin(0.5).setDepth(1000);
+        this.battText = this.add.text(1050, 420, this.player.chargeTotal, this.textConfig).setOrigin(1, 0.5).setDepth(1000);
         
 
         //creates red lines for debug
@@ -104,13 +101,11 @@ class Play extends Phaser.Scene {
             frameRate: 30
         });
 
+
         //Obstacles group is created
-        this.obstacleGroup = this.add.group({
-            runChildUpdate: true
-        })
-        this.chargeGroup = this.add.group({
-            runChildUpdate: true
-        })
+        this.obstacleGroup = this.add.group({ runChildUpdate: true })
+        this.chargeGroup = this.add.group({ runChildUpdate: true })
+        this.decorGroup = this.add.group({ runChildUpdate: true });
 
         this.generateObstacles();
         // Timer for how often obstacles should start spawning
@@ -126,12 +121,7 @@ class Play extends Phaser.Scene {
         this.scoreTimer = this.time.addEvent({
             delay: 1000, 
             callback: function() {
-                if(this.gameOverCheck()){
-                    this.incrementScore(1);
-                    
-
-                }
-                
+                if(this.gameOverCheck()){ this.incrementScore(1); }
             },
             loop: true,
             callbackScope: this
@@ -149,12 +139,34 @@ class Play extends Phaser.Scene {
             loop: true,
             callbackScope: this
         })
+        // Spawn decorations
+        this.decorTimer = this.time.addEvent({
+            delay: this.spawnDelay, 
+            callback: function() {
+                let leftSpawn = new Phaser.Math.Vector2(720, -200);
+                let rightSpawn = new Phaser.Math.Vector2(game.config.width, 50);
+                let leftLamp = new Decor(this, leftSpawn.x, leftSpawn.y, 'decorAtlas', 'leftLamp', this.obstacleSpeed);
+                let rightLamp = new Decor(this, rightSpawn.x, rightSpawn.y, 'decorAtlas', 'rightLamp', this.obstacleSpeed);
+                this.decorGroup.add(leftLamp);
+                this.decorGroup.add(rightLamp);
 
-
+                leftSpawn.x -= Phaser.Math.Between(50, 400);
+                rightSpawn.x += Phaser.Math.Between(200, 500);
+                let currentAvailable = ["tree1", "trunk1", "rock1", "bush1", "sign1", "rail1"];
+                let randomSprite = Phaser.Utils.Array.GetRandom(currentAvailable);
+                let leftDecor = new Decor(this, leftSpawn.x, leftSpawn.y, 'decorAtlas', randomSprite, this.obstacleSpeed);
+                randomSprite = Phaser.Utils.Array.GetRandom(currentAvailable);
+                let rightDecor = new Decor(this, rightSpawn.x, rightSpawn.y, 'decorAtlas', randomSprite, this.obstacleSpeed);
+                this.decorGroup.add(leftDecor);
+                this.decorGroup.add(rightDecor);
+            },
+            loop: true,
+            callbackScope: this
+        })
+        
     }
 
     update(time, delta) {
-        this.physics.add.overlap(this.player, this.chargeGroup, this.chargeCollision, null, this);
 
         // Delta is the amount of time since the previous update() call. Using this with the movement makes the game consistent across all framerates
         delta = delta/1000 // Turn delta into milliseconds
@@ -165,6 +177,7 @@ class Play extends Phaser.Scene {
                 this.incrementSpeed();
             }
         } else {
+            this.player.destroy();
             if(keyR.isDown) this.scene.restart();
             if(this.lateText == null){
                 //end song and gameover SFX
@@ -173,14 +186,16 @@ class Play extends Phaser.Scene {
                 
                 // When it's gameover, play animation for late text
                 this.scoreText.alpha = 0;
-                this.add.rectangle(0, 0, game.config.width, game.config.height, "#000000", 0.5).setOrigin(0).setDepth(999);
+                this.battText.alpha = 0;
+                this.BattUI.alpha = 0;
+                this.add.rectangle(0, 0, game.config.width, game.config.height, "#000000", 0.5).setOrigin(0).setDepth(1000);
                 this.lateText = this.add.sprite(game.config.width-300, 100, 'lateText').setOrigin(0.5).setDepth(1000);
                 this.lateText.anims.play('late');
                 this.lateText.on('animationcomplete', () => { 
                     // after text animation, add score and instructions for restarting
                     this.textConfig.fontSize = "32px";
-                    let highScore = this.add.text(game.config.width+300, 300, `highscore: ${highscore}`, this.textConfig).setOrigin(0.5).setDepth(1000);
-                    let instructions = this.add.text(game.config.width+300, 350, `press (r) to restart`, this.textConfig).setOrigin(0.5).setDepth(1000);
+                    let highScore = this.add.text(game.config.width+300, 300, `HIGHSCORE: ${highscore}`, this.textConfig).setOrigin(0.5).setDepth(1000);
+                    let instructions = this.add.text(game.config.width+300, 350, `PRESS (R) TO RESTART`, this.textConfig).setOrigin(0.5).setDepth(1000);
                     // smooth animation for text position
                     this.tweens.add({
                         targets: [highScore, instructions],
@@ -228,15 +243,13 @@ class Play extends Phaser.Scene {
     //function that increases the players battery charge
     chargeCollision(player, charge) {
         charge.destroy();
-        player.chargeTotal += 5;
-        this.score += 100;
+        player.chargeTotal += 10;
+        this.incrementScore(10);
     }
 
     //returns true if the player goes off the bottom or left of the screen
     gameOverCheck() {
-        if(this.player.x < -20 || this.player.y > 480) {
-            return false;
-        }
+        if(this.player.x < -20 || this.player.y > 480) return false;
         return true;
     }
 
@@ -260,7 +273,7 @@ class Play extends Phaser.Scene {
             let column = 0;
             for(const digit of splitRow){
                 if(digit == '1'){
-                    let obstacle = new Obstacle(this, initialPos[0]+(48*column)+(48*row), initialPos[1]+(27*column)-(27*row), Phaser.Utils.Array.GetRandom(this.carList), 0, this.obstacleSpeed);
+                    let obstacle = new Obstacle(this, initialPos[0]+(48*column)+(48*row), initialPos[1]+(27*column)-(27*row), "uglyCarAtlas2", Phaser.Utils.Array.GetRandom(this.carList), this.obstacleSpeed);
                     this.obstacleGroup.add(obstacle);
                 }
                 if(digit == '2'){
@@ -279,9 +292,9 @@ class Play extends Phaser.Scene {
     incrementSpeed(){
         // console.log("Incrementing speed");
         this.obstacleSpeed += .04; // Changes the speed for FUTURE obstacles
-        Phaser.Actions.Call(this.obstacleGroup.getChildren(), function(obstacle) {
-            obstacle.movespeed = this.obstacleSpeed; // Changes the speed of CURRENT obstacles
-        }, this);
+        // Changes the speed of CURRENT obstacles
+        Phaser.Actions.Call(this.obstacleGroup.getChildren(), function(obstacle) { obstacle.movespeed = this.obstacleSpeed; }, this);
+        Phaser.Actions.Call(this.chargeGroup.getChildren(), function(charge) { charge.movespeed = this.obstacleSpeed; }, this);
         //this.player.movespeed += .01;
         this.spawnTimer.delay -= .2;
     }
@@ -291,7 +304,6 @@ class Play extends Phaser.Scene {
         this.score += score;
         this.scoreText.text = this.score;
         if (this.score > highscore) highscore = this.score;
-
     }
 
     updateBattery(){
