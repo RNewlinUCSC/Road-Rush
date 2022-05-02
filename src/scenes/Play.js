@@ -136,7 +136,7 @@ class Play extends Phaser.Scene {
         })
 
         this.batteryTimer = this.time.addEvent({
-            delay: 900, 
+            delay: 875, 
             callback: function() {
                 if(this.gameOverCheck()){
                     if(this.player.chargeTotal > 0) {
