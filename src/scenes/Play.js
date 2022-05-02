@@ -49,10 +49,10 @@ class Play extends Phaser.Scene {
         this.carList = ['uglyCar0','uglyCar1','uglyCar2','uglyCar3','uglyCar4','uglyCar5','uglyCar6','uglyCar7'];
 
         //set values of top bounding line
-        this.blx1 = 540;
+        this.blx1 = 360;
         this.bly1 = 0;
         this.blx2 = 1080;
-        this.bly2 = 311.769;
+        this.bly2 = 415.692;
 
         //set values of right bounding line *variable names don't match
         this.blLx1 = 522.681;
@@ -161,7 +161,7 @@ class Play extends Phaser.Scene {
         //if gameover is triggered player movement is disabled
         if(this.gameOverCheck()) {
             this.player.update(delta);
-            if(this.obstacleSpeed < 220) {
+            if(this.obstacleSpeed < 300) {
                 this.incrementSpeed();
             }
         } else {
@@ -217,11 +217,12 @@ class Play extends Phaser.Scene {
     }
 
     //function to pass if the player collides with an obstacle
-    playerCollision() {
+    playerCollision(player, car) {
         //this.sound.play('honk');
-        this.player.x -= 1.75/8;
-        this.player.y += 1/8;
-        return true;
+        if(player.x - 10 < car.x || player.y < car.y + 60) {
+            player.x -= 1.75/4 * 3;
+            player.y += 1/4 * 3;
+        }
     }
 
     //function that increases the players battery charge
