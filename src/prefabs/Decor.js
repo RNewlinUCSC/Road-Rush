@@ -9,8 +9,8 @@ class Decor extends Phaser.GameObjects.Sprite {
 
     update(time, delta) {
         delta = delta/1000
-        this.x -= 1.75/2 * this.movespeed * delta;
-        this.y += 1/2 * this.movespeed * delta;
+        this.x -= 1.75 * this.movespeed * delta;
+        this.y += 1 * this.movespeed * delta;
         
         if(this.x < -50) this.destroy();
     }

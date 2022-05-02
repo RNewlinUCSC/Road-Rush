@@ -12,19 +12,10 @@ class Play extends Phaser.Scene {
         //load images here
         this.load.path = "./assets/"; // set path so that it's easier to type the strings when loading
         this.load.image('obstacle', 'carGray.png');
-        // this.load.image('uglyCar0', 'uC0.png');
-        // this.load.image('uglyCar1', 'uC1.png');
-        // this.load.image('uglyCar2', 'uC2.png');
-        // this.load.image('uglyCar3', 'uC3.png');
-        // this.load.image('uglyCar4', 'uC4.png');
-        // this.load.image('uglyCar5', 'uC5.png');
-        // this.load.image('uglyCar6', 'uC6.png');
-        // this.load.image('uglyCar7', 'uC7.png');
         this.load.image('charge', 'charge.png');
         //load sprite sheets
         this.load.spritesheet('lateText', 'lateSheet.png', {frameWidth: 448, frameHeight: 96, startFrame: 0, endFrame: 30});
         this.load.spritesheet('pinkCar', 'pinkCarAtlas.png', {frameWidth: 48, frameHeight: 48, startFrame: 0, endFrame: 2});
-        //this.load.spritesheet('uglyCars', 'uglyCarAtlas.png', {framewidth: 48, frameHeight: 48, startFrame: 0, endFrame: 7});
 
         this.textConfig = {
             fontFamily: 'PixelFont',
