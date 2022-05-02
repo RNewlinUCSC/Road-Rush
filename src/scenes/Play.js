@@ -187,6 +187,7 @@ class Play extends Phaser.Scene {
         } else {
             this.player.destroy();
             if(keyR.isDown) this.scene.restart();
+            if(keyRIGHT.isDown) this.scene.start("Menu");
             if(this.lateText == null){
                 //end song and gameover SFX
                 this.game.sound.stopAll();
@@ -196,19 +197,20 @@ class Play extends Phaser.Scene {
                 this.scoreText.alpha = 0;
                 this.battText.alpha = 0;
                 this.BattUI.alpha = 0;
+                let centerX = game.config.width/2;
                 this.add.rectangle(0, 0, game.config.width, game.config.height, "#000000", 0.5).setOrigin(0).setDepth(1000);
-                this.lateText = this.add.sprite(game.config.width-300, 100, 'lateText').setOrigin(0.5).setDepth(1000);
+                this.lateText = this.add.sprite(centerX, 100, 'lateText').setOrigin(0.5, 0.5).setDepth(1000);
                 this.lateText.anims.play('late');
                 this.lateText.on('animationcomplete', () => { 
                     // after text animation, add score and instructions for restarting
                     this.textConfig.fontSize = "32px";
-                    let highScore = this.add.text(game.config.width+300, 300, `HIGHSCORE: ${highscore}`, this.textConfig).setOrigin(0.5).setDepth(1000);
-                    let instructions = this.add.text(game.config.width+300, 350, `PRESS (R) TO RESTART`, this.textConfig).setOrigin(0.5).setDepth(1000);
+                    let highScore = this.add.text(centerX, 300+500, `HIGHSCORE: ${highscore}`, this.textConfig).setOrigin(0.5).setDepth(1000);
+                    let instructions = this.add.text(centerX, 350+500, `PRESS (R) TO RESTART, (->) FOR MENU`, this.textConfig).setOrigin(0.5).setDepth(1000);
                     // smooth animation for text position
                     this.tweens.add({
                         targets: [highScore, instructions],
                         alpha: {from: 0, to: 1},
-                        x: {from: game.config.width+300, to: game.config.width-300},
+                        y: "-= 500",
                         ease: "Sine.easeInOut",
                         duration: 500,
                         repeat: 0,
