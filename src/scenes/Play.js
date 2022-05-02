@@ -16,9 +16,18 @@ class Play extends Phaser.Scene {
         //load images here
         this.load.path = "./assets/"; // set path so that it's easier to type the strings when loading
         this.load.image('obstacle', 'carGray.png');
+        this.load.image('uglyCar0', 'uC0.png');
+        this.load.image('uglyCar1', 'uC1.png');
+        this.load.image('uglyCar2', 'uC2.png');
+        this.load.image('uglyCar3', 'uC3.png');
+        this.load.image('uglyCar4', 'uC4.png');
+        this.load.image('uglyCar5', 'uC5.png');
+        this.load.image('uglyCar6', 'uC6.png');
+        this.load.image('uglyCar7', 'uC7.png');
         this.load.image('charge', 'charge.png');
         //load sprite sheets
         this.load.spritesheet('lateText', 'lateSheet.png', {frameWidth: 448, frameHeight: 96, startFrame: 0, endFrame: 30});
+        //this.load.spritesheet('uglyCars', 'uglyCarAtlas.png', {framewidth: 48, frameHeight: 48, startFrame: 0, endFrame: 7});
 
         this.textConfig = {
             fontFamily: 'PixelFont',
@@ -35,6 +44,9 @@ class Play extends Phaser.Scene {
         var backgroundMusic = this.sound.add('music');
         backgroundMusic.loop = true; 
         backgroundMusic.play();
+
+        //ugly car array
+        this.carList = ['uglyCar0','uglyCar1','uglyCar2','uglyCar3','uglyCar4','uglyCar5','uglyCar6','uglyCar7'];
 
         //set values of top bounding line
         this.blx1 = 540;
@@ -206,13 +218,13 @@ class Play extends Phaser.Scene {
 
     //function to pass if the player collides with an obstacle
     playerCollision() {
-        
         //this.sound.play('honk');
         this.player.x -= 1.75/8;
         this.player.y += 1/8;
         return true;
     }
 
+    //function that increases the players battery charge
     chargeCollision(player, charge) {
         charge.destroy();
         player.chargeTotal += 5;
@@ -247,7 +259,7 @@ class Play extends Phaser.Scene {
             let column = 0;
             for(const digit of splitRow){
                 if(digit == '1'){
-                    let obstacle = new Obstacle(this, initialPos[0]+(48*column)+(48*row), initialPos[1]+(27*column)-(27*row), 'obstacle', 0, this.obstacleSpeed);
+                    let obstacle = new Obstacle(this, initialPos[0]+(48*column)+(48*row), initialPos[1]+(27*column)-(27*row), Phaser.Utils.Array.GetRandom(this.carList), 0, this.obstacleSpeed);
                     this.obstacleGroup.add(obstacle);
                 }
                 if(digit == '2'){

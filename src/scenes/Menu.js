@@ -6,7 +6,7 @@ class Menu extends Phaser.Scene {
         
         this.load.path = "./assets/";
         this.load.audio('sfx_select', 'selectSFX.wav');
-        this.load.image('playerCube', 'carPink.png');
+        this.load.image('playerCube', 'pinkCar.png');
         this.load.image('background', 'carRoad.png');
         this.load.image('menuSprites', 'menuSprites.png');
         this.load.spritesheet('startButton', 'startSheet.png', {frameWidth: 192, frameHeight: 112, startFrame: 0, endFrame: 7});
