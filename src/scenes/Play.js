@@ -129,14 +129,14 @@ class Play extends Phaser.Scene {
         this.scoreTimer = this.time.addEvent({
             delay: 1000, 
             callback: function() {
-                if(this.gameOverCheck()){ this.incrementScore(1); }
+                if(this.gameOverCheck()){ this.incrementScore(10); }
             },
             loop: true,
             callbackScope: this
         })
 
         this.batteryTimer = this.time.addEvent({
-            delay: 800, 
+            delay: 900, 
             callback: function() {
                 if(this.gameOverCheck()){
                     if(this.player.chargeTotal > 0) {
@@ -251,8 +251,8 @@ class Play extends Phaser.Scene {
     //function that increases the players battery charge
     chargeCollision(player, charge) {
         charge.destroy();
-        player.chargeTotal += 10;
-        this.incrementScore(10);
+        player.chargeTotal += 5;
+        this.incrementScore(100);
     }
 
     //returns true if the player goes off the bottom or left of the screen
