@@ -11,8 +11,8 @@ class Cube extends Phaser.Physics.Arcade.Sprite {
 
     update(delta) {
         this.setDepth(this.y + 14);
-        if(this.inMenu) this.anims.play('playerForward', 0, true);
-        if(!this.inMenu){ // If player is in the menu, don't move forward
+        if(this.inMenu) this.anims.play('playerForward', 0, true); 
+        if(!this.inMenu && !keyLEFT.isDown && !keyRIGHT.isDown && !game.input.activePointer.isDown){ 
             this.anims.play('playerForward', true);
             this.x += 1.75/8 * this.movespeed * delta;
             this.y -= 1/8 * this.movespeed * delta;

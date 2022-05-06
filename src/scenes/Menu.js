@@ -14,8 +14,8 @@ class Menu extends Phaser.Scene {
         this.load.image('menuSprites', 'menuSprites.png');
         this.load.atlas('decorAtlas', 'decorAtlas.png', 'decorAtlas.json');
         this.load.atlas('uglyCarAtlas2', 'uglyCarAtlas2.png', 'uglyCarAtlas2.json');
-        this.load.spritesheet('playerLeftSheet', 'carPinkLeftSheet.png', {frameWidth: 48, frameHeight: 48});
-        this.load.spritesheet('playerRightSheet', 'carPinkRightSheet.png', {frameWidth: 48, frameHeight: 48});
+        this.load.spritesheet('playerLeftSheet', 'carLeft.png', {frameWidth: 48, frameHeight: 48});
+        this.load.spritesheet('playerRightSheet', 'carRight.png', {frameWidth: 48, frameHeight: 48});
         this.load.spritesheet('playerForwardSheet', 'carPinkSheet.png', {frameWidth: 48, frameHeight: 48});
         this.load.spritesheet('startButton', 'startSheet.png', {frameWidth: 192, frameHeight: 112, startFrame: 0, endFrame: 7});
 
@@ -39,7 +39,7 @@ class Menu extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
         // Game objects
-        this.player = new Cube(this, 390, 340, 'playerForwardSheet').setOrigin(1,0);
+        this.player = new Cube(this, 390, 340, 'playerForwardSheet', 0).setOrigin(1,0);
         this.player.inMenu = true;
 
         this.add.image(0, 0, 'background').setOrigin(0).setDepth(0);
@@ -56,13 +56,13 @@ class Menu extends Phaser.Scene {
         });
         this.anims.create({
             key: 'playerLeft',
-            frames: this.anims.generateFrameNumbers('playerLeftSheet', { start: 0, end: 0, first: 0}),
+            frames: this.anims.generateFrameNumbers('playerLeftSheet', { start: 0, end: 7, first: 0}),
             frameRate: 30,
             repeat: -1
         });
         this.anims.create({
             key: 'playerRight',
-            frames: this.anims.generateFrameNumbers('playerRightSheet', { start: 0, end: 0, first: 0}),
+            frames: this.anims.generateFrameNumbers('playerRightSheet', { start: 0, end: 7, first: 0}),
             frameRate: 30,
             repeat: -1
         });
